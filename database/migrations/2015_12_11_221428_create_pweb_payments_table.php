@@ -16,7 +16,10 @@ class CreatePwebPaymentsTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->string('transaction_id');
+            $table->string('jenis_donasi');
+            $table->enum('status', ['pending','batal','berhasil']);
             $table->integer('amount');
+            $table->text('bukti');
             $table->timestamps();
 
             $table->foreign( 'user_id' )

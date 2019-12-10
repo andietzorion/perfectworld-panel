@@ -1,6 +1,71 @@
 @extends( 'admin.header' )
 
 @section( 'content' )
+
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject bold uppercase">Form</span>
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <form class="form-horizontal" action="{{ url( 'admin/donate/form' ) }}" method="post">
+                {!! csrf_field() !!}
+                <div class="form-body">
+                    <div class="form-group form-md-line-input">
+                        <label class="col-md-2 control-label" for="status">Status</label>
+                        <div class="col-md-9">
+                            {!! Form::checkbox( 'form_status', NULL, settings( 'form_status' ), ['class' => 'make-switch', 'id' => 'status', 'data-size' => 'normal', 'data-on-color' => 'danger', 'data-off-color' => 'default'] ) !!}
+                        </div>
+                    </div>
+                    <div class="form-group form-md-line-input">
+                        {!! Form::label( 'form_per', 'Currency Price', ['class' => 'col-md-2 control-label'] ) !!}
+                        <div class="col-md-9">
+                            {!! Form::input( 'number', 'form_per', settings( 'form_per' ), ['class' => 'form-control', 'id' => 'form_per', 'min' => 0] ) !!}
+                            <div class="form-control-focus"> </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-md-line-input">
+                        {!! Form::label( 'form_min', 'Minimum Amout', ['class' => 'col-md-2 control-label'] ) !!}
+                        <div class="col-md-9">
+                            {!! Form::input( 'number', 'form_min', settings( 'form_min' ), ['class' => 'form-control', 'id' => 'form_min', 'min' => 0] ) !!}
+                            <div class="form-control-focus"> </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-md-line-input">
+                        {!! Form::label( 'debit_bank', 'Nama Bank', ['class' => 'col-md-2 control-label'] ) !!}
+                        <div class="col-md-9">
+                            {!! Form::input( 'text', 'debit_bank', settings( 'debit_bank' ), ['class' => 'form-control', 'id' => 'debit_bank'] ) !!}
+                            <div class="form-control-focus"> </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-md-line-input">
+                        {!! Form::label( 'debit_nama', 'Atas Nama', ['class' => 'col-md-2 control-label'] ) !!}
+                        <div class="col-md-9">
+                            {!! Form::input( 'text', 'debit_nama', settings( 'debit_nama' ), ['class' => 'form-control', 'id' => 'debit_nama'] ) !!}
+                            <div class="form-control-focus"> </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-md-line-input">
+                        {!! Form::label( 'debit_nomor', 'Nomor Rekening', ['class' => 'col-md-2 control-label'] ) !!}
+                        <div class="col-md-9">
+                            {!! Form::input( 'number', 'debit_nomor', settings( 'debit_nomor' ), ['class' => 'form-control', 'id' => 'debit_nomor', 'min' => 0] ) !!}
+                            <div class="form-control-focus"> </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-9">
+                            <button type="submit" class="btn green">{{ trans( 'main.save_settings' ) }}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
     <div class="portlet light bordered">
         <div class="portlet-title">
             <div class="caption">

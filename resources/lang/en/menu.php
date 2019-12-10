@@ -32,6 +32,7 @@ return [
     ],
     'donate' => [
         'title' => 'Donate',
+        'view' => 'View Donates',
         'settings' => 'Settings'
     ],
     'voucher' => [

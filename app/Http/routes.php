@@ -66,6 +66,7 @@ Route::get( 'donate', ['as' => 'donate.index', 'uses' => 'Front\DonateController
 Route::post( 'donate/paypal', 'Front\DonateController@postPaypalSubmit' );
 Route::get( 'donate/paypal/complete', 'Front\DonateController@postPayPalComplete' );
 Route::get( 'donate/paymentwall', 'Front\DonateController@getPaymentwall' );
+Route::post( 'donate/manual', 'Front\DonateController@postForm' );
 
 /* Vote */
 Route::get( 'vote', ['as' => 'vote.index', 'uses' => 'Front\VoteController@getIndex'] );
@@ -131,9 +132,13 @@ Route::group( ['prefix' => 'admin', 'middleware' => ['auth', 'admin'] ], functio
     Route::resource( 'shop', 'Admin\ShopController' );
 
     /* Donate */
+
+    Route::get('donate/mailview', 'Admin\DonateController@getEmail_template');
     Route::get( 'donate/settings', ['as' => 'admin.donate.settings', 'uses' => 'Admin\DonateController@getSettings'] );
     Route::post( 'donate/paypal', 'Admin\DonateController@postPaypalSettings' );
     Route::post( 'donate/paymentwall', 'Admin\DonateController@postPaymentwallSettings' );
+    Route::post( 'donate/form', 'Admin\DonateController@postForm' );
+    Route::resource( 'donate', 'Admin\DonateController' );
 
     /* Voucher */
     Route::resource( 'voucher', 'Admin\VoucherController' );

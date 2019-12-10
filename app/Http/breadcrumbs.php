@@ -218,6 +218,18 @@ Breadcrumbs::register( 'admin.shop.settings', function( $breadcrumbs )
 });
 
 /* Donate */
+Breadcrumbs::register( 'admin.donate', function( $breadcrumbs )
+{
+    $breadcrumbs->parent( 'admin.index' );
+    $breadcrumbs->push( trans( 'main.apps.donate' ) );
+});
+
+Breadcrumbs::register( 'admin.donate.index', function( $breadcrumbs )
+{
+    $breadcrumbs->parent( 'admin.donate' );
+    $breadcrumbs->push( trans( 'menu.donate.view' ) );
+});
+
 Breadcrumbs::register( 'admin.donate.settings', function( $breadcrumbs )
 {
     $breadcrumbs->parent( 'admin.index' );

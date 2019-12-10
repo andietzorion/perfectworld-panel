@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Omnipay\Omnipay;
 use Paymentwall_Pingback;
+use Validator;
 use wadeshuler\paypalipn\IpnListener;
 
 class DonateController extends Controller
@@ -136,6 +137,52 @@ class DonateController extends Controller
         else
         {
             echo $pingback->getErrorSummary();
+        }
+    }
+
+    public function postForm(Request $request)
+    {
+        $validator = Validator::make( $request->all(), [
+            'jumlah'=>'required',
+            'username'=>'required',
+            'nama'=>'required',
+            'bukti'=>'required',
+            'tokens'=>'required'
+        ]);
+
+
+        if ( $validator->fails() )
+        {
+            return redirect()
+                    ->back()
+                    ->withErrors( $validator )
+                    ->withInput();
+        }
+
+        $user = User::where('name', $request->username)->first();
+        if($user){
+
+            if($request->hasFile('bukti')){
+                $file = $request->file('bukti');
+                $path = $file->getRealPath();
+                $type = pathinfo($path, PATHINFO_EXTENSION);
+                $data = file_get_contents($path);
+                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+           }
+
+            $payLast = Payment::orderBy('created_at', 'desc')->first();
+            $pay = new Payment;
+            $pay->user_id = $user->ID;
+            $pay->transaction_id = $payLast->transaction_id + 1;
+            $pay->jenis_donasi = $request->jenis;
+            $pay->status = 'pending';
+            $pay->amount = $request->jumlah;
+            $pay->bukti = $base64;
+            $pay->save();
+
+            return redirect()->back()->with('msg', 'Transaksi berhasil. Mohon tunggu proses verifikasi oleh admin.');
+        }else{
+            return redirect()->back()->with('msg', 'Akun tidak valid, mohon input username dengan benar');
         }
     }
 }

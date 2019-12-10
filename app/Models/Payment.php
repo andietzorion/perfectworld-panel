@@ -21,4 +21,9 @@ class Payment extends Model
     protected $fillable = ['user_id', 'transaction_id', 'amount'];
 
     protected $primaryKey = 'transaction_id';
+
+    public function user()
+    {
+        return $this->hasOne('App\Models\User','ID','user_id');
+    }
 }

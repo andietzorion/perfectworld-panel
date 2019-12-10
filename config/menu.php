@@ -45,6 +45,7 @@ return [
         ],
         'donate' => [
             'application' => TRUE,
+            'view',
             'settings'
         ],
         'voucher' => [

@@ -32,6 +32,7 @@ return [
     ],
     'donate' => [
         'title' => 'Donasi',
+        'view' => 'Lihat Donasi',
         'settings' => 'Pengaturan'
     ],
     'voucher' => [
