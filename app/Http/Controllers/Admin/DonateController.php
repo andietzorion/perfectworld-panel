@@ -36,7 +36,7 @@ class DonateController extends Controller
     public function edit($id)
     {
         $datas = Payment::with('user')->find($id);
-        return $this->sentMail($datas);
+        // return phpmailer_donate($datas);
         $datas->status = 'berhasil';
         $datas->save();
 
@@ -48,47 +48,6 @@ class DonateController extends Controller
 
         flash()->success('Donate success.');
         return redirect( 'admin/donate' );
-    }
-    private function sentMail($data=[])
-    {
-        // return $data;
-        $mail   = new PHPMailer();
-        $mymail = 'no-reply@pw-orion.co.id';
-
-        $mail->isSMTP();
-        $mail->Mailer = "smtp";
-        $mail->SMTPDebug  = 0;
-        $mail->SMTPAuth   = TRUE;
-        $mail->SMTPSecure = 'tls';
-        $mail->Port       = 587;
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->Username   = env('SMTP_USER');
-        $mail->Password   = env('SMTP_PW');
-
-        //Recipients
-        $mail->setFrom($mymail, 'Admin');
-        $mail->addAddress($data->user->email, $data->user->truename);
-        $mail->addReplyTo($mymail, 'Admin');
-        $mail->isHTML(true);
-        $mail->Subject = 'Donate Success';
-
-        $url = url('admin/donate/mailview');
-        $client = new \GuzzleHttp\Client();
-        $response = $client->get($url);
-        $response->getStatusCode(); # 200
-        $response->getHeaderLine('content-type'); # 'application/json; charset=utf8'
-        $a = (string) $response->getBody(); # '{"id": 1420053, "name": "guzzle", ...}'
-        $a = str_replace("%nama%", $data->user->truename, $a);
-        $a = str_replace("%curr%", settings('currency_name'), $a);
-        $a = str_replace("%amount%", (round($data->amount / settings('form_per'))), $a);
-        $a = str_replace("%total%", $data->user->money, $a);
-        $mail->Body    = $a;
-        
-        if(!$mail->send()){
-            return back()->with('msg', 'Link could not be sent');
-        }else{
-            return back()->with('msg', 'Link has been sent! Please check your email for reset link');
-        }
     }
 
     public function update()
@@ -181,9 +140,5 @@ class DonateController extends Controller
         flash()->success( trans( 'main.settings_saved' ) );
 
         return redirect( 'admin/donate/settings' );
-    }
-    public function getEmail_template()
-    {
-        return view('emails/donate_sukses');
     }
 }

@@ -185,4 +185,9 @@ class DonateController extends Controller
             return redirect()->back()->with('msg', 'Akun tidak valid, mohon input username dengan benar');
         }
     }
+    
+    public function getEmail_template()
+    {
+        return view('emails/donate_sukses');
+    }
 }

@@ -9,6 +9,56 @@ function testMail()
     $message = file_get_contents(view('emails/template'));
     return $message;
 }
+function phpmailer_donate($data = []){
+    $mail   = new PHPMailer();
+    $mymail = 'no-reply@pw-orion.co.id';
+
+    $url = '/donate_sukses.html';
+    return file_get_contents($url);
+    // return $url;
+    $client = new \GuzzleHttp\Client();
+    $response = $client->get($url);
+    $response->getStatusCode(); # 200
+    $response->getHeaderLine('content-type'); # 'application/json; charset=utf8'
+    $a = (string) $response->getBody(); # '{"id": 1420053, "name": "guzzle", ...}'
+    return $a;
+
+    $mail->isSMTP();
+    $mail->Mailer = "smtp";
+    $mail->SMTPDebug  = 2;
+    $mail->SMTPAuth   = TRUE;
+    $mail->SMTPSecure = 'tls';
+    $mail->Port       = 587;
+    $mail->Host       = 'smtp.gmail.com';
+    $mail->Username   = env('SMTP_USER');
+    $mail->Password   = env('SMTP_PW');
+
+    //Recipients
+    $mail->setFrom($mymail, 'Admin');
+    $mail->addAddress($data->user->email, $data->user->truename);
+    $mail->addReplyTo($mymail, 'Admin');
+    $mail->isHTML(true);
+    $mail->Subject = 'Donate Success';
+
+    $url = url('donate/mailview');
+    $client = new \GuzzleHttp\Client();
+    $response = $client->get($url);
+    $response->getStatusCode(); # 200
+    $response->getHeaderLine('content-type'); # 'application/json; charset=utf8'
+    $a = (string) $response->getBody(); # '{"id": 1420053, "name": "guzzle", ...}'
+    $a = str_replace("%nama%", $data->user->truename, $a);
+    $a = str_replace("%curr%", settings('currency_name'), $a);
+    $a = str_replace("%amount%", (round($data->amount / settings('form_per'))), $a);
+    $a = str_replace("%total%", $data->user->money, $a);
+    $mail->Body    = $a;
+    
+    $mail->send();
+    // if(!$mail->send()){
+    //     return back()->with('msg', 'Link could not be sent');
+    // }else{
+    //     return back()->with('msg', 'Link has been sent! Please check your email for reset link');
+    // }
+}
 function phpmailer($data = []){
     $mail   = new PHPMailer();
     $mymail = 'no-reply@pw-orion.co.id';
