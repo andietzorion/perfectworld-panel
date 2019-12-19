@@ -26,7 +26,7 @@
                                     <td>{{$data->jenis_donasi}}</td>
                                     <td>{{$data->amount}} IDR</td>
                                     <td>{{$data->amount / settings('form_per')}} {{ settings( 'currency_name' ) }}</td>
-                                    <td><img src="{{$data->bukti}}" class="popbox"></td>
+                                    <td><img src="{{'../uploads/'.$data->bukti}}" class="popbox"></td>
                                     <td>{{$data->status}}</td>
                                     <td>
                                         <div class="fs20">

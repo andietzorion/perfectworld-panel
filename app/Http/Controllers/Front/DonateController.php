@@ -164,10 +164,15 @@ class DonateController extends Controller
 
             if($request->hasFile('bukti')){
                 $file = $request->file('bukti');
-                $path = $file->getRealPath();
-                $type = pathinfo($path, PATHINFO_EXTENSION);
-                $data = file_get_contents($path);
-                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                $nama_file = $file->getClientOriginalName();
+                $format = $file->getClientOriginalExtension();
+                $new = "pic_".uniqid().'.'.$format;
+                $file->move('uploads', $new);
+
+                // $path = $file->getRealPath();
+                // $type = pathinfo($path, PATHINFO_EXTENSION);
+                // $data = file_get_contents($path);
+                // $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
            }
 
             $payLast = Payment::orderBy('created_at', 'desc')->first();
@@ -177,7 +182,7 @@ class DonateController extends Controller
             $pay->jenis_donasi = $request->jenis;
             $pay->status = 'pending';
             $pay->amount = $request->jumlah;
-            $pay->bukti = $base64;
+            $pay->bukti = $new;
             $pay->save();
 
             return redirect()->back()->with('msg', 'Transaksi berhasil. Mohon tunggu proses verifikasi oleh admin.');
