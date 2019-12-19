@@ -2,7 +2,7 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
+use App\Models\User;
 
 function testMail()
 {
@@ -13,19 +13,19 @@ function phpmailer_donate($data = []){
     $mail   = new PHPMailer();
     $mymail = 'no-reply@pw-orion.co.id';
 
-    $url = '/donate_sukses.html';
-    return file_get_contents($url);
+    $url = url('/donate_sukses.html');
+    // return file_get_contents($url);
     // return $url;
     $client = new \GuzzleHttp\Client();
     $response = $client->get($url);
     $response->getStatusCode(); # 200
     $response->getHeaderLine('content-type'); # 'application/json; charset=utf8'
+
     $a = (string) $response->getBody(); # '{"id": 1420053, "name": "guzzle", ...}'
-    return $a;
 
     $mail->isSMTP();
     $mail->Mailer = "smtp";
-    $mail->SMTPDebug  = 2;
+    $mail->SMTPDebug  = 0;
     $mail->SMTPAuth   = TRUE;
     $mail->SMTPSecure = 'tls';
     $mail->Port       = 587;
@@ -40,18 +40,14 @@ function phpmailer_donate($data = []){
     $mail->isHTML(true);
     $mail->Subject = 'Donate Success';
 
-    $url = url('donate/mailview');
-    $client = new \GuzzleHttp\Client();
-    $response = $client->get($url);
-    $response->getStatusCode(); # 200
-    $response->getHeaderLine('content-type'); # 'application/json; charset=utf8'
-    $a = (string) $response->getBody(); # '{"id": 1420053, "name": "guzzle", ...}'
-    $a = str_replace("%nama%", $data->user->truename, $a);
+    $user = User::find($data->user->ID);
+    $a = str_replace("%nama%", $user->truename, $a);
     $a = str_replace("%curr%", settings('currency_name'), $a);
     $a = str_replace("%amount%", (round($data->amount / settings('form_per'))), $a);
-    $a = str_replace("%total%", $data->user->money, $a);
+    $a = str_replace("%total%", $user->money, $a);
     $mail->Body    = $a;
     
+    // return $a;
     $mail->send();
     // if(!$mail->send()){
     //     return back()->with('msg', 'Link could not be sent');

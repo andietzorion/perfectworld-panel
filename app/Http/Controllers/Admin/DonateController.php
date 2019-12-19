@@ -36,7 +36,6 @@ class DonateController extends Controller
     public function edit($id)
     {
         $datas = Payment::with('user')->find($id);
-        // return phpmailer_donate($datas);
         $datas->status = 'berhasil';
         $datas->save();
 
@@ -45,6 +44,7 @@ class DonateController extends Controller
         $user = User::find($datas->user->ID);
         $user->money = $user->money + $amount;
         $user->save();
+        phpmailer_donate($datas);
 
         flash()->success('Donate success.');
         return redirect( 'admin/donate' );
