@@ -11,7 +11,7 @@ function testMail()
 }
 function phpmailer_donate($data = []){
     $mail   = new PHPMailer();
-    $mymail = 'no-reply@pw-orion.co.id';
+    $mymail = env('SMTP_SENDER');
 
     $url = url('/donate_sukses.html');
     // return file_get_contents($url);
@@ -57,7 +57,7 @@ function phpmailer_donate($data = []){
 }
 function phpmailer($data = []){
     $mail   = new PHPMailer();
-    $mymail = 'no-reply@pw-orion.co.id';
+    $mymail = env('SMTP_SENDER');
 
     $mail->isSMTP();
     $mail->Mailer = "smtp";
